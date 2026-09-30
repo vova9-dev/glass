@@ -909,11 +909,22 @@ function impact(l,dx,dy,sp,primary){
 }
 // Thick-glass tone: a low body partial plus a few inharmonic overtones that die quickly, through a
 // lowpass so the top end stays soft. Smaller circles still ring higher.
+// Browsers only let audio start from a user gesture. Starting it lazily from the physics left the
+// context suspended, so clinks were scheduled on a paused clock and played late. Start it on first input.
+function unlockAudio(){
+  try{
+    actx=actx||new (window.AudioContext||window.webkitAudioContext)({latencyHint:'interactive'});
+    if(actx.state!=='running')actx.resume();
+  }catch(e){}
+}
+addEventListener('pointerdown',unlockAudio,{capture:true});
+addEventListener('keydown',unlockAudio,{capture:true});
 function clink(r,s){
   if(!S.sound||S.soundVol<=0)return;
   try{
-    actx=actx||new (window.AudioContext||window.webkitAudioContext)();
-    if(actx.state==='suspended')actx.resume();
+    // audio is started from the first click/drag (see unlockAudio); if it isn't running yet, skip this
+    // clink instead of queueing it on a paused clock, which is what made sounds arrive late
+    if(!actx||actx.state!=='running')return;
     const t=actx.currentTime;if(t-lastClink<.06)return;lastClink=t;
     const f0=Math.min(2400,Math.max(320,1050*Math.sqrt(90/r))),out=actx.createGain(),lp=actx.createBiquadFilter();
     lp.type='lowpass';lp.frequency.value=3200;lp.Q.value=.3;
@@ -1315,7 +1326,7 @@ document.getElementById('collide').addEventListener('click',()=>{S.collide=!S.co
 document.getElementById('gravity').addEventListener('click',()=>{S.gravity=!S.gravity;syncUI();});
 document.getElementById('drop').addEventListener('click',dropCircle);
 document.getElementById('scatter').addEventListener('click',scatter);
-document.getElementById('sound').addEventListener('click',()=>{S.sound=!S.sound;syncUI();if(S.sound)clink(70,.6);});
+document.getElementById('sound').addEventListener('click',()=>{S.sound=!S.sound;syncUI();if(S.sound){unlockAudio();actx&&actx.resume().then(()=>clink(70,.6),()=>{});}});
 document.getElementById('panelPos').addEventListener('click',e=>{const b=e.target.closest('[data-pos]');if(!b)return;S.panelPos=b.dataset.pos;syncUI();});
 document.getElementById('hideTitle').addEventListener('click',()=>{S.hideTitle=!S.hideTitle;syncUI();needComposite=true;});
 document.getElementById('pFillCol').addEventListener('input',e=>{S.pFillCol=e.target.value;document.getElementById('o-pFillCol').textContent=S.pFillCol.toUpperCase();needComposite=true;});
