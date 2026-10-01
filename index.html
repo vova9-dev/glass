@@ -914,11 +914,7 @@ const end=e=>{
     const l=lenses[drag.i];
     if(l&&l.label!=null&&e&&Math.hypot(e.clientX-drag.cx,e.clientY-drag.cy)<5&&performance.now()-drag.t0<350){
       openSection(l);drag=null;cv.className='';return;}
-    if(l){
-      const idle=performance.now()-pv.t>90;
-      const sp=Math.hypot(pv.vx,pv.vy),k=idle?0:Math.min(1,2500/(sp||1))*heft();
-      l.vx=pv.vx*k;l.vy=pv.vy*k;
-    }
+    // on release the ball simply keeps the momentum it has from being pulled
   }
   drag=null;cv.className='';
 };
@@ -928,7 +924,7 @@ function move(e){
   const [x,y]=toScene(e.clientX,e.clientY),now=performance.now(),dt=(now-pv.t)/1000;
   if(dt>.001){pv.vx=pv.vx*.5+(x-pv.x)/dt*.5;pv.vy=pv.vy*.5+(y-pv.y)/dt*.5;pv.x=x;pv.y=y;pv.t=now;}
   if(drag.type==='src'){const b=beams[drag.i];if(S.parallel){b.ax+=x-b.sx;b.ay+=y-b.sy;}b.sx=x;b.sy=y;}
-  else if(drag.type==='lens'){const l=lenses[drag.i];l.x=x+drag.ox;l.y=y+drag.oy;l.vx=pv.vx;l.vy=pv.vy;}
+  else if(drag.type==='lens'){drag.tx=x+drag.ox;drag.ty=y+drag.oy;} // where the pointer wants the ball; physics pulls it there
   else if(drag.type==='none'){}
   else if(S.parallel){
     let dx=x-gridMeta.cx,dy=y-gridMeta.cy;const dl=Math.hypot(dx,dy);if(dl<1)return;
@@ -943,7 +939,7 @@ function move(e){
 // Bounciness is the restitution of hits; friction is how fast they slow down.
 const PHYS={g:900,get damp(){return S.friction},get eWall(){return S.bounce*.9},get eHit(){return S.bounce}};
 const heft=()=>1-.6*S.weight;
-const held=l=>l.hidden||l.parked||(drag&&drag.type==='lens'&&lenses[drag.i]===l);
+const held=l=>l.hidden||l.parked; // a dragged ball is NOT held: it stays a normal physical ball, pulled by a spring
 /* ---------- impacts: rim glint, dot sparkle, glass clink ---------- */
 const clock=()=>performance.now()/1000;
 let actx=null,lastClink=0;
@@ -1214,6 +1210,13 @@ function physics(dt){
     for(const l of lenses){
       l.vx=l.vx||0;l.vy=l.vy||0;
       if(held(l))continue;
+      if(drag&&drag.type==='lens'&&lenses[drag.i]===l&&drag.tx!=null){
+        // dragging: a damped spring pulls the ball toward the pointer, so it keeps its inertia, lags a little on
+        // fast moves and rolls as it goes (heavier balls follow more softly)
+        const k=340*(1-.55*S.weight),c=1.8*Math.sqrt(k);
+        l.vx+=(k*(drag.tx-l.x)-c*l.vx)*h;l.vy+=(k*(drag.ty-l.y)-c*l.vy)*h;
+        const sp=Math.hypot(l.vx,l.vy);if(sp>3500){l.vx*=3500/sp;l.vy*=3500/sp;}
+      }
       if(S.gravity)l.vy+=PHYS.g*h;
       const f=Math.exp(-PHYS.damp*h);l.vx*=f;l.vy*=f;
       if(sec.lens&&S.openMode==='depth'){ // depth: a gentle push out of the reading column
@@ -1551,6 +1554,7 @@ W=innerWidth;H=innerHeight;sc=Math.min(W/620,H/720,2);
 applyPreset('grid');
 if(START_TEXT!=='title'){Object.assign(S,TEXT_PRESETS[START_TEXT]);document.getElementById('txt').value=S.text;document.getElementById('txt').rows=6;}
 else Object.assign(S,TEXT_PRESETS.title);
+if(START_TEXT==='bio')lenses=lenses.filter(l=>l.label===0); // bio page: only the About ball
 syncUI();
 resize();
 panel.classList.add('gone');
