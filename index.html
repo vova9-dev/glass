@@ -159,7 +159,7 @@ textarea{width:100%;box-sizing:border-box;resize:none;background:var(--chip);col
       <label class="ctl colorrow" for="labelColor"><span>Label colour <span class="for-theme"></span></span><output id="o-labelColor"></output><input type="color" id="labelColor"></label>
     </div>
     <div class="group" id="sectionSliders"><div class="group-label">Open section</div>
-      <div class="chips" id="openModes"><button class="chip" data-mode="inplace">Open in place</button><button class="chip" data-mode="overlay">Open as overlay</button><button class="chip" data-mode="scroll">Scroll page</button><button class="chip" data-mode="dive">Dive into ball</button><button class="chip" data-mode="depth">Depth</button></div>
+      <div class="chips" id="openModes"><button class="chip" data-mode="inplace">Open in place</button><button class="chip" data-mode="overlay">Open as overlay</button><button class="chip" data-mode="dive">Dive into ball</button><button class="chip" data-mode="depth">Depth</button></div>
       <div class="chips" id="panelPos"><button class="chip" data-pos="center">Panel centre</button><button class="chip" data-pos="left">Panel left</button></div>
       <div class="chips"><button class="chip" id="hideTitle" aria-pressed="true">Hide title when open</button></div>
       <label class="ctl colorrow" for="pFillCol"><span>Panel colour</span><output id="o-pFillCol"></output><input type="color" id="pFillCol"></label>
@@ -202,7 +202,7 @@ const FIGMA_LENSES = [
 let lenses = FIGMA_LENSES.map(c => ({...c}));
 let beams = [];
 const S = {
-  preset:'grid', weight:.5, bounce:.6, friction:.6, nRefl:.8, inAmt:.12, inAng:90, inDist:.12, inBlur:.25, inTone:0, textColor:'#1c1c1e', labelColor:'#18181b', labelTrack:-.035, rim:.55, rimW:.7, rimDir:1, fill:.01, fillW:.55, shadow:.03, shadowSize:.12, shadowY:.16, catchL:5.7, sat:1.8, dots:.05, dotR:.3, dotSp:4.4, dotBase:.13, dotAng:89, dotTone:1, roll:2.8, idleSpin:.1, alt:true, textSize:20, textWeight:580, textTrack:0, count:10, cScale:1.5, labels:'About, Contacts, Works, Lab', labelSize:.41, labelInk:.97, labelDots:.33, labelWeight:570, labelSettle:.1, labelBack:.8, hovFill:.075, hovRim:.8, labelSizeOpen:.75, pBlur:.73, pFill:.055, pRefl:.37, pFillCol:'#ffffff', pDots:.05, pShadow:.07, pShBlur:36, pShY:40, hideTitle:true, panelPos:'center', openMode:'scroll', frost:.85, sound:true, soundVol:.29, ringAmt:.86, flashAmt:.46,
+  preset:'grid', weight:.5, bounce:.6, friction:.6, nRefl:.8, inAmt:.12, inAng:90, inDist:.12, inBlur:.25, inTone:0, textColor:'#1c1c1e', labelColor:'#18181b', labelTrack:-.035, rim:.55, rimW:.7, rimDir:1, fill:.01, fillW:.55, shadow:.03, shadowSize:.12, shadowY:.16, catchL:5.7, sat:1.8, dots:.05, dotR:.3, dotSp:4.4, dotBase:.13, dotAng:89, dotTone:1, roll:2.8, idleSpin:.1, alt:true, textSize:20, textWeight:580, textTrack:0, count:10, cScale:1.5, labels:'About, Contacts, Works, Lab', labelSize:.41, labelInk:.97, labelDots:.33, labelWeight:570, labelSettle:.1, labelBack:.8, hovFill:.075, hovRim:.8, labelSizeOpen:.75, pBlur:.73, pFill:.055, pRefl:.37, pFillCol:'#ffffff', pDots:.05, pShadow:.07, pShBlur:36, pShY:40, hideTitle:true, panelPos:'center', openMode:'dive', frost:.85, sound:true, soundVol:.29, ringAmt:.86, flashAmt:.46,
   grid:5, gridMax:1600, spacing:202, lock:true, soft:.52, parallel:true, gravity:false, collide:true, newSize:123, newVariety:.9,
   theme:'grey', ior:1.1, disp:0.245, refl:1.7, bright:1.7, glow:0,
   lens:0.27, ca:0.06, width:1, orbit:false, handles:false, text:'Vova (9) Deviatkin\nProduct Designer'
@@ -216,13 +216,8 @@ const THEMES = {
 
 /* ---------- layout ---------- */
 let W=0, H=0, dpr=1, DW=0, DH=0, sc=1;
-// camY (css px) is how far the page is scrolled. Balls live in the scrolling world; beams stay fixed on
-// screen (they run down the whole page), so they use the B variants without the camera.
-let camY=0;
-const toScreen = (x,y) => [W/2 + x*sc, H/2 + y*sc - camY];
-const toScene  = (x,y) => [(x - W/2)/sc, (y + camY - H/2)/sc];
-const toScreenB = (x,y) => [W/2 + x*sc, H/2 + y*sc];
-const toSceneB  = (x,y) => [(x - W/2)/sc, (y - H/2)/sc];
+const toScreen = (x,y) => [W/2 + x*sc, H/2 + y*sc];
+const toScene  = (x,y) => [(x - W/2)/sc, (y - H/2)/sc];
 const halfW = () => W/2/sc, halfH = () => H/2/sc;
 
 /* ---------- spectrum ---------- */
@@ -294,7 +289,7 @@ const PRESETS = {
     rim:.55, rimW:.7, rimDir:1, fill:.01, fillW:.55, shadow:.03, shadowSize:.12, shadowY:.16, catchL:5.7, newSize:123, newVariety:.9,
     dots:.05, dotR:.3, dotSp:4.4, dotBase:.13, dotAng:89, dotTone:1, roll:2.8, idleSpin:.1,
     text:'Vova (9) Deviatkin\nProduct Designer', textWeight:580,
-    labelSize:.41, labelWeight:570, labelTrack:-.035, labelInk:.97, labelDots:.33, labelSettle:.1, labelBack:.8, hovFill:.075, hovRim:.8, labelSizeOpen:.75, pBlur:.73, pFill:.055, pRefl:.37, pFillCol:'#ffffff', pDots:.05, pShadow:.07, pShBlur:36, pShY:40, hideTitle:true, panelPos:'center', openMode:'scroll', frost:.85, sound:true, soundVol:.29, ringAmt:.86, flashAmt:.46,
+    labelSize:.41, labelWeight:570, labelTrack:-.035, labelInk:.97, labelDots:.33, labelSettle:.1, labelBack:.8, hovFill:.075, hovRim:.8, labelSizeOpen:.75, pBlur:.73, pFill:.055, pRefl:.37, pFillCol:'#ffffff', pDots:.05, pShadow:.07, pShBlur:36, pShY:40, hideTitle:true, panelPos:'center', openMode:'dive', frost:.85, sound:true, soundVol:.29, ringAmt:.86, flashAmt:.46,
     lenses:[{x:-67.39,y:-194.42,r:109.493},{x:423.32,y:263.42,r:64.493},{x:394.83,y:43.37,r:83.493},{x:33.49,y:262.45,r:64.0},{x:-400.75,y:-267.11,r:60.0},{x:-308.65,y:-111.55,r:60.0},{x:180.66,y:110.17,r:60.0},{x:277.92,y:-208.04,r:101.347},{x:-175.92,y:120.2,r:98.693},{x:241.74,y:275.23,r:56.42}]}),
   studio: () => ({beams:[{sx:-246.7,sy:130.02,ax:16.96,ay:12.65,w:1,p:1,lam:null}], disp:.205, ior:1.14, refl:1, glow:.25,
     bright:2.3, lens:.23, ca:.06, theme:'grey', lenses:STUDIO_LENSES}),
@@ -352,7 +347,7 @@ precision highp float;
 uniform vec2 uRes;uniform float uDpr;
 uniform sampler2D uText,uL0,uL1,uL2,uL3;
 uniform float uLS,uSoft,uSat,uDots,uDotR,uDotSp,uDotBase,uDotTone;uniform vec3 uDotL;uniform mat3 uRot[12];uniform float uLabI[12];uniform sampler2D uLabT;uniform float uLabW,uLabInk,uLabDots,uLabBack;uniform vec3 uLabCol;
-uniform vec4 uImp[12];uniform float uRingAmt,uFlashAmt;uniform float uHov[12];uniform vec4 uPanel;uniform float uPanelR,uPanelOn,uTitleHide,uCamY;
+uniform vec4 uImp[12];uniform float uRingAmt,uFlashAmt;uniform float uHov[12];uniform vec4 uPanel;uniform float uPanelR,uPanelOn,uTitleHide;
 // Section page drawn into the same layer as the title, so the glass bends it and the beams light it.
 uniform sampler2D uPage;uniform vec4 uPageRect;uniform float uPageE;uniform int uDiveI;uniform float uDiveE;
 float pageA(vec2 q){vec2 uv=(q-uPageRect.xy)/uPageRect.zw;if(uv.x<0.||uv.x>1.||uv.y<0.||uv.y>1.)return 0.;return textureLod(uPage,vec2(uv.x,1.-uv.y),0.).a;}
@@ -440,8 +435,7 @@ void main(){
   float edge=g?1.-hM:0.;
   vec2 off=-nr*rad*uLens*pow(edge,3.);
   vec2 qg=p+off,qr=p+off*(1.+uCA),qb=p+off*(1.-uCA);
-  vec2 cy=vec2(0.,uCamY); // the title scrolls with the page
-  vec3 tm=vec3(textureLod(uText,UV(qr+cy),0.).a,textureLod(uText,UV(qg+cy),0.).a,textureLod(uText,UV(qb+cy),0.).a)*(1.-uTitleHide);
+  vec3 tm=vec3(textureLod(uText,UV(qr),0.).a,textureLod(uText,UV(qg),0.).a,textureLod(uText,UV(qb),0.).a)*(1.-uTitleHide);
   if(uPageE>0.)tm=max(tm,vec3(pageA(qr),pageA(qg),pageA(qb))*uPageE);
   vec2 up=UV(p),uq=UV(qg);
   vec3 blp=bl(up);
@@ -643,7 +637,7 @@ function drawText(){
   const lines=S.text.split('\n').slice(0,6),lh=S.textSize*1.25,top=-lines.length*lh/2;
   tx.textAlign='center';
   lines.forEach((ln,i)=>{
-    const [x,y]=toScreenB(0,top+i*lh+(lh-S.textSize)/2);
+    const [x,y]=toScreen(0,top+i*lh+(lh-S.textSize)/2);
     if(native||!track){tx.fillText(ln,x*dpr+track/2,y*dpr);return;}
     tx.textAlign='left';
     const w=[...ln].reduce((a,ch)=>a+tx.measureText(ch).width+track,-track);
@@ -670,7 +664,7 @@ function trace(){
   const inside=(x,y)=>{for(const c of C){const dx=x-c[0],dy=y-c[1];if(dx*dx+dy*dy<c[2]*c[2])return true;}return false;};
   const FAR=5000, GLASS=1.6, stack=[];
   for(const bm of beams){
-    const [sx,sy]=toScreenB(bm.sx,bm.sy),[ax,ay]=toScreenB(bm.ax,bm.ay);
+    const [sx,sy]=toScreen(bm.sx,bm.sy),[ax,ay]=toScreen(bm.ax,bm.ay);
     let bx=ax-sx,by=ay-sy;const bl=Math.hypot(bx,by)||1;bx/=bl;by/=bl;
     const px=-by,py=bx, wpx=Math.max(.5,bm.w*sc);
     const mono=bm.lam!=null;
@@ -791,7 +785,7 @@ function composite(target=null){
   drawFS(P_comp,target,p=>{
     tex(0,textTex);tex(1,T.acc.tex);tex(2,T.h.tex);tex(3,T.q.tex);tex(4,T.e.tex);tex(5,labTex);gl.uniform1i(p.u('uLabT'),5);
     {const li=new Float32Array(12).fill(-1);V.forEach((l,i)=>{if(l.label!=null)li[i]=l.label;});gl.uniform1fv(p.u('uLabI'),li);}
-    gl.uniform1f(p.u('uLabW'),scrollMode()?S.labelSize+(.92-S.labelSize)*easeIO(Math.min(1,Math.max(0,camY/(H*.6)))):S.labelSize+(sec.lens&&inPlace()?(S.labelSizeOpen-S.labelSize)*Math.min(Math.max(sec.e,0),1):0)); /* labels grow as the balls shrink */gl.uniform1f(p.u('uLabInk'),S.labelInk);gl.uniform1f(p.u('uLabDots'),S.labelDots);gl.uniform1f(p.u('uLabBack'),S.labelBack);gl.uniform3fv(p.u('uLabCol'),hexLin(S.labelColor));
+    gl.uniform1f(p.u('uLabW'),S.labelSize+(sec.lens&&inPlace()?(S.labelSizeOpen-S.labelSize)*Math.min(Math.max(sec.e,0),1):0)); /* labels grow as the balls shrink */gl.uniform1f(p.u('uLabInk'),S.labelInk);gl.uniform1f(p.u('uLabDots'),S.labelDots);gl.uniform1f(p.u('uLabBack'),S.labelBack);gl.uniform3fv(p.u('uLabCol'),hexLin(S.labelColor));
     {const now=clock(),im=new Float32Array(48);V.forEach((l,i)=>{const e=l.imp;if(e&&now-e.t<1)im.set([e.dx,e.dy,now-e.t,e.s],i*4);});gl.uniform4fv(p.u('uImp'),im);}
     gl.uniform1f(p.u('uRingAmt'),S.ringAmt);
     {const hv=new Float32Array(12);V.forEach((l,i)=>hv[i]=l.hov||0);gl.uniform1fv(p.u('uHov'),hv);}
@@ -805,14 +799,13 @@ function composite(target=null){
     gl.uniform3fv(p.u('uC'),c);gl.uniform1i(p.u('uN'),V.length);
     gl.uniform1f(p.u('uTitleHide'),sec.lens&&(S.hideTitle||pageMode())?Math.min(Math.max(sec.e,0),1):0); // the title fades out as a section opens
     {const on=sec.lens&&pageMode(),C=pageCol();tex(6,pageTex);gl.uniform1i(p.u('uPage'),6);
-     gl.uniform1f(p.u('uCamY'),camY);
-     gl.uniform1f(p.u('uPageE'),scrollMode()?1:on?Math.min(Math.max((sec.e-.35)/.65,0),1):0);
-     gl.uniform4f(p.u('uPageRect'),C.x,scrollMode()?H+40-camY:C.top-(sec.scroll||0),C.w,Math.max(pageH,1));
+     gl.uniform1f(p.u('uPageE'),on?Math.min(Math.max((sec.e-.35)/.65,0),1):0);
+     gl.uniform4f(p.u('uPageRect'),C.x,C.top-(sec.scroll||0),C.w,Math.max(pageH,1));
      gl.uniform1i(p.u('uDiveI'),on&&S.openMode==='dive'?V.indexOf(sec.lens):-1);gl.uniform1f(p.u('uDiveE'),Math.min(Math.max(sec.e,0),1));}
     {const g=panelGeom();gl.uniform1f(p.u('uPanelOn'),g?1:0); // balls still reflect the panel
      if(g){gl.uniform4f(p.u('uPanel'),g.cx,g.cy,g.hx,g.hy);gl.uniform1f(p.u('uPanelR'),g.r);}}
     const s=new Float32Array(30),scol=new Float32Array(30);
-    beams.slice(0,10).forEach((b,i)=>{const [x,y]=toScreenB(b.sx,b.sy);s.set([x,y,0],i*3);
+    beams.slice(0,10).forEach((b,i)=>{const [x,y]=toScreen(b.sx,b.sy);s.set([x,y,0],i*3);
       const k=Math.min(1.4,.5+b.p*.4)*S.bright/1.2;scol.set((b.lam!=null?laserRGB(b.lam):[1,.97,.92]).map(v=>v*k),i*3);});
     gl.uniform3fv(p.u('uS'),s);gl.uniform3fv(p.u('uSC'),scol);gl.uniform1i(p.u('uNS'),Math.min(10,beams.length));
     gl.uniform1f(p.u('uLens'),S.lens);gl.uniform1f(p.u('uCA'),S.ca);gl.uniform1f(p.u('uGlow'),S.glow);
@@ -843,7 +836,7 @@ function buildHandles(){
 function placeHandles(){
   handlesEl.hidden=!S.handles;
   beams.forEach((b,i)=>{
-    const [sx,sy]=toScreenB(b.sx,b.sy),[ax,ay]=toScreenB(b.ax,b.ay);
+    const [sx,sy]=toScreen(b.sx,b.sy),[ax,ay]=toScreen(b.ax,b.ay);
     hEls[i][0].style.transform=`translate(${sx}px,${sy}px) translate(-50%,-50%)`;
     hEls[i][1].style.transform=`translate(${ax}px,${ay}px) translate(-50%,-50%)`;
     hEls[i][1].hidden = S.parallel || (beams.length>1 && i>0);
@@ -854,7 +847,7 @@ function placeHandles(){
 let drag=null;
 const pv={x:0,y:0,t:0,vx:0,vy:0};
 function hit(x,y){
-  if(!S.lock)for(let i=0;i<beams.length;i++){const [sx,sy]=toScreenB(beams[i].sx,beams[i].sy);if(Math.hypot(x-sx,y-sy)<22)return {type:'src',i};}
+  if(!S.lock)for(let i=0;i<beams.length;i++){const [sx,sy]=toScreen(beams[i].sx,beams[i].sy);if(Math.hypot(x-sx,y-sy)<22)return {type:'src',i};}
   const [px,py]=toScene(x,y);
   let best=null,bd=Infinity;
   lenses.forEach((l,i)=>{if(l.hidden)return;const d=Math.hypot(px-l.x,py-l.y);if(d<l.r&&d/l.r<bd){bd=d/l.r;best={type:'lens',i,ox:l.x-px,oy:l.y-py};}});
@@ -875,8 +868,6 @@ cv.addEventListener('pointerdown',e=>{
     closePanel();return;
   }
   // in place: balls stay draggable while a section is open; switching and closing happen on a click (see end())
-  if(scrollMode()){const h=hit(e.clientX,e.clientY);
-    if(h.type!=='lens'&&h.type!=='src'&&(camY>0||e.pointerType!=='mouse')){drag={type:'scroll',cx:e.clientX,cy:e.clientY,ly:e.clientY,t0:performance.now()};cv.setPointerCapture(e.pointerId);camAnim=null;return;}}
   drag=hit(e.clientX,e.clientY);drag.cx=e.clientX;drag.cy=e.clientY;drag.t0=performance.now();cv.setPointerCapture(e.pointerId);
   cv.className=drag.type==='lens'||drag.type==='src'?'grabbing':'';
   const [x,y]=toScene(e.clientX,e.clientY);Object.assign(pv,{x,y,t:performance.now(),vx:0,vy:0});
@@ -905,9 +896,7 @@ const end=e=>{
   if(drag&&drag.type==='lens'){
     const l=lenses[drag.i];
     if(l&&l.label!=null&&e&&Math.hypot(e.clientX-drag.cx,e.clientY-drag.cy)<5&&performance.now()-drag.t0<350){
-      if(scrollMode())scrollToSection(camY>H*.5&&activeSection()===l.label?-1:l.label); // clicking the active one goes back to the top
-      else openSection(l);
-      drag=null;cv.className='';return;}
+      openSection(l);drag=null;cv.className='';return;}
     if(l){
       const idle=performance.now()-pv.t>90;
       const sp=Math.hypot(pv.vx,pv.vy),k=idle?0:Math.min(1,2500/(sp||1))*heft();
@@ -918,10 +907,10 @@ const end=e=>{
 };
 cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',end);
 function move(e){
-  if(drag.type==='scroll'){if(scrollMode())setCam(camY+drag.ly-e.clientY);else scrollPage(drag.ly-e.clientY);drag.ly=e.clientY;return;}
+  if(drag.type==='scroll'){scrollPage(drag.ly-e.clientY);drag.ly=e.clientY;return;}
   const [x,y]=toScene(e.clientX,e.clientY),now=performance.now(),dt=(now-pv.t)/1000;
   if(dt>.001){pv.vx=pv.vx*.5+(x-pv.x)/dt*.5;pv.vy=pv.vy*.5+(y-pv.y)/dt*.5;pv.x=x;pv.y=y;pv.t=now;}
-  if(drag.type==='src'){const b=beams[drag.i];const [x,y]=toSceneB(e.clientX,e.clientY);if(S.parallel){b.ax+=x-b.sx;b.ay+=y-b.sy;}b.sx=x;b.sy=y;}
+  if(drag.type==='src'){const b=beams[drag.i];if(S.parallel){b.ax+=x-b.sx;b.ay+=y-b.sy;}b.sx=x;b.sy=y;}
   else if(drag.type==='lens'){const l=lenses[drag.i];l.x=x+drag.ox;l.y=y+drag.oy;l.vx=pv.vx;l.vy=pv.vy;}
   else if(drag.type==='none'){}
   else if(S.parallel){
@@ -1107,7 +1096,6 @@ const pc=document.createElement('canvas'),pcx=pc.getContext('2d'),pageTex=gl.cre
 let pageH=1;
 gl.bindTexture(gl.TEXTURE_2D,pageTex);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,1,1,0,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array(4)); // blank until a page is built
 const pageMode=()=>S.openMode==='dive'||S.openMode==='depth';
-const scrollMode=()=>S.openMode==='scroll';
 const pageCol=()=>{const w=Math.min(640,W-48);return {x:(W-w)/2,w,top:Math.max(88,H*.14)};};
 // Placeholder copy to replace. Block types: h1, lead, note, h3, p, row [left,right], big, tiles [count,name,meta].
 const PAGE={
@@ -1119,15 +1107,8 @@ const PAGE={
   works:[['h1','Works'],['lead','Selected projects.'],['tiles',8,'Project','Year · Role']],
   lab:[['h1','Lab'],['lead','Small visual experiments, first posted on X.'],['note','Placeholder tiles. Replace with your posts.'],['tiles',9,'Experiment','Date · short note']],
 };
-let anchors=[];
-function buildLongPage(){ // scroll mode: every menu section, in label order, as one page below the hero
-  const names=labelList(),blocks=[];
-  names.forEach((n,i)=>{if(i)blocks.push(['gap']);blocks.push(...(PAGE[n.toLowerCase()]||[['h1',n],['p','Content goes here.']]));});
-  buildPage(null,blocks);
-}
-function buildPage(name,given){
-  const C=pageCol(),w=C.w,r=Math.min(2,dpr),blocks=given||PAGE[name.toLowerCase()]||[['h1',name],['p','Content goes here.']];
-  anchors=[];
+function buildPage(name){
+  const C=pageCol(),w=C.w,r=Math.min(2,dpr),blocks=PAGE[name.toLowerCase()]||[['h1',name],['p','Content goes here.']];
   const run=draw=>{
     let y=0;const c=pcx;
     const font=(wt,sz,fam='Geist')=>{c.font=`${wt} ${sz*r}px ${fam}, system-ui, sans-serif`;};
@@ -1135,8 +1116,7 @@ function buildPage(name,given){
     const wrap=(t,sz,lh,wt,a)=>{font(wt,sz);let line='';for(const wd of t.split(' ')){const tt=line?line+' '+wd:wd;if(c.measureText(tt).width/r>w&&line){text(line,0,y,a);y+=lh;line=wd;}else line=tt;}if(line){text(line,0,y,a);y+=lh;}};
     c.textBaseline='top';c.fillStyle='#fff';c.strokeStyle='#fff';
     for(const b of blocks){
-      if(b[0]==='h1'){if(!draw)anchors.push(y);wrap(b[1],40,46,600,1);y+=20;}
-      else if(b[0]==='gap'){y+=140;}
+      if(b[0]==='h1'){wrap(b[1],40,46,600,1);y+=20;}
       else if(b[0]==='lead'){wrap(b[1],21,31,400,1);y+=14;}
       else if(b[0]==='note'){wrap(b[1],12,18,400,.55);y+=8;}
       else if(b[0]==='h3'){y+=28;font(500,11,'Geist Mono');text(b[1].toUpperCase(),0,y,.55);y+=24;}
@@ -1163,37 +1143,7 @@ function buildPage(name,given){
 }
 const maxScroll=()=>Math.max(0,pageCol().top+pageH+60-H);
 function scrollPage(d){if(!sec.lens||!pageMode())return;sec.scroll=Math.min(maxScroll(),Math.max(0,(sec.scroll||0)+d));needComposite=true;}
-addEventListener('wheel',e=>{
-  if(scrollMode()){e.preventDefault();camAnim=null;setCam(camY+e.deltaY);return;}
-  if(sec.lens&&pageMode()){e.preventDefault();scrollPage(e.deltaY);}
-},{passive:false});
-/* Scroll page: the hero is the top of a long page. Scrolling (or clicking a menu ball, which scrolls to its
-   section) moves the world up; the menu balls ride along, shrink and dock at the side as navigation. */
-let camAnim=null;
-const maxCam=()=>Math.max(0,40+pageH+80);
-function setCam(v){const n=Math.min(maxCam(),Math.max(0,v));if(n!==camY){camY=n;camMoved=true;}}
-let camMoved=false;
-function scrollToSection(i){
-  const target=i<0||anchors[i]==null?0:H+40+anchors[i]-Math.max(72,H*.1);
-  camAnim={from:camY,to:Math.min(maxCam(),Math.max(0,target)),t:0};
-}
-function dockSlot(i,n){
-  if(W<700){const r=26,x=W/2+(i-(n-1)/2)*(2*r+18);return {x,y:16+r,r};}
-  const r=52,sp=128;return {x:W-r-28,y:H/2+(i-(n-1)/2)*sp,r};
-}
-function activeSection(){let a=-1;anchors.forEach((y,i)=>{if(camY>=H+40+y-H*.45)a=i;});return a;}
-function updateDock(dt){
-  if(camAnim){camAnim.t=Math.min(1,camAnim.t+dt/1.1);setCam(camAnim.from+(camAnim.to-camAnim.from)*easeIO(camAnim.t));if(camAnim.t>=1)camAnim=null;}
-  const t=easeIO(Math.min(1,Math.max(0,camY/(H*.6)))),menu=lenses.filter(l=>l.label!=null).sort((a,b)=>a.label-b.label);
-  menu.forEach((l,i)=>{
-    if(t<=0){if(l.home){l.x=l.home.x;l.y=l.home.y;l.r=l.home.r;l.home=null;l.parked=false;l.vx=l.vy=0;}return;}
-    if(!l.home){l.home={x:l.x,y:l.y,r:l.r};l.parked=true;}
-    const [hx,hy]=toScreen(l.home.x,l.home.y),d=dockSlot(i,menu.length);
-    const sx=hx+(d.x-hx)*t,sy=hy+(d.y-hy)*t,r=l.home.r*sc+(d.r-l.home.r*sc)*t;
-    const [nx,ny]=toScene(sx,sy);l.vx=dt>0?(nx-l.x)/dt:0;l.vy=dt>0?(ny-l.y)/dt:0;l.x=nx;l.y=ny;l.r=r/sc;
-  });
-  const moved=camMoved;camMoved=false;return moved||t>0&&t<1;
-}
+addEventListener('wheel',e=>{if(sec.lens&&pageMode()){e.preventDefault();scrollPage(e.deltaY);}},{passive:false});
 backBtn.addEventListener('click',closePanel);
 
 /* ---------- section content (placeholder copy to replace) ---------- */
@@ -1228,7 +1178,7 @@ function placeSheet(){
 }
 document.getElementById('sheetClose').addEventListener('click',closePanel);
 addEventListener('keydown',e=>{if(e.key==='Escape'&&sec.lens)closePanel();});
-document.getElementById('openModes').addEventListener('click',e=>{const b=e.target.closest('[data-mode]');if(!b)return;if(sec.lens)return;S.openMode=b.dataset.mode;camAnim=null;setCam(0);if(scrollMode())buildLongPage();syncUI();markDirty();});
+document.getElementById('openModes').addEventListener('click',e=>{const b=e.target.closest('[data-mode]');if(!b)return;S.openMode=b.dataset.mode;syncUI();});
 
 // Contacts slower than REST don't bounce (resting contact); faster ones use the bounciness.
 // This is what keeps squeezed or touching circles quiet instead of re-bouncing every substep.
@@ -1510,7 +1460,7 @@ document.getElementById('hideTitle').addEventListener('click',()=>{S.hideTitle=!
 document.getElementById('pFillCol').addEventListener('input',e=>{S.pFillCol=e.target.value;document.getElementById('o-pFillCol').textContent=S.pFillCol.toUpperCase();needComposite=true;});
 document.getElementById('labelColor').addEventListener('input',e=>{S.labelColor=e.target.value;S.per[S.theme].labelColor=S.labelColor;document.getElementById('o-labelColor').textContent=S.labelColor.toUpperCase();needComposite=true;});
 document.getElementById('textColor').addEventListener('input',e=>{S.textColor=e.target.value;S.per[S.theme].textColor=S.textColor;document.getElementById('o-textColor').textContent=S.textColor.toUpperCase();needComposite=true;});
-document.getElementById('labels').addEventListener('input',e=>{S.labels=e.target.value;drawLabels();assignLabels();if(scrollMode())buildLongPage();});
+document.getElementById('labels').addEventListener('input',e=>{S.labels=e.target.value;drawLabels();assignLabels();});
 document.getElementById('txt').addEventListener('input',e=>{S.text=e.target.value;drawText();});
 document.getElementById('resetLenses').addEventListener('click',()=>{lenses=FIGMA_LENSES.map(c=>({...c,r:c.r*S.cScale}));assignLabels();markDirty();});
 const panel=document.getElementById('panel'),collapse=document.getElementById('collapse');
@@ -1539,7 +1489,6 @@ function resize(){
   else beams.forEach(b=>{b.sx=Math.max(-hw,Math.min(hw,b.sx));b.sy=Math.max(-hh,Math.min(hh,b.sy));});
   buildTargets();drawText();placeHandles();markDirty();
   if(sec.lens&&pageMode()&&sec.pageName!=null)buildPage(sec.pageName);
-  if(scrollMode())buildLongPage();
 }
 let last=performance.now();
 function loop(now){
@@ -1547,13 +1496,11 @@ function loop(now){
   const dt=Math.min(.05,(now-last)/1000);last=now;
   syncCount();
   const panelMoving=stepPanel(dt);
-  const camMoving=scrollMode()?updateDock(dt):false;
-  const active=physics(dt)||panelMoving||camMoving;
+  const active=physics(dt)||panelMoving;
   if(S.dots>0&&spin(dt))needComposite=true;
   {const now=clock();if(lenses.some(l=>l.imp&&now-l.imp.t<1))needComposite=true;}
   // ease each menu circle's hover amount toward 1 (under the mouse) or 0
-  const act=scrollMode()&&camY>H*.5?activeSection():-1;
-  for(const l of lenses){const t=(l===hoverLens&&!drag)||(act>=0&&l.label===act)?1:0,h=l.hov||0;if(Math.abs(t-h)>.002){l.hov=h+(t-h)*(1-Math.exp(-dt*14));needComposite=true;}else l.hov=t;}
+  for(const l of lenses){const t=l===hoverLens&&!drag?1:0,h=l.hov||0;if(Math.abs(t-h)>.002){l.hov=h+(t-h)*(1-Math.exp(-dt*14));needComposite=true;}else l.hov=t;}
   const motion=!!drag||S.orbit||active;
   if(S.orbit){
     const a=dt*.25,ca=Math.cos(a),sa=Math.sin(a);
@@ -1584,7 +1531,7 @@ addEventListener('keydown',e=>{
 });
 addEventListener('resize',resize);
 drawLabels();
-if(document.fonts)document.fonts.load('500 20px Geist').then(()=>{drawText();drawLabels();if(scrollMode())buildLongPage();}).catch(()=>{});
+if(document.fonts)document.fonts.load('500 20px Geist').then(()=>{drawText();drawLabels();}).catch(()=>{});
 requestAnimationFrame(loop);
 })();
 </script>
