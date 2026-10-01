@@ -1577,6 +1577,8 @@ document.getElementById('collide').addEventListener('click',()=>{S.collide=!S.co
 document.getElementById('gravity').addEventListener('click',()=>{S.gravity=!S.gravity;syncUI();});
 document.getElementById('drop').addEventListener('click',dropCircle);
 document.getElementById('scatter').addEventListener('click',scatter);
+// S scatters the balls (handy for starting a recording); ignored while typing in a field
+addEventListener('keydown',e=>{if((e.key==='s'||e.key==='S')&&!e.metaKey&&!e.ctrlKey&&!e.altKey&&!(e.target.closest&&e.target.closest('input,textarea,select,[contenteditable]')))scatter();});
 document.getElementById('sound').addEventListener('click',()=>{S.sound=!S.sound;syncUI();if(S.sound){unlockAudio();actx&&actx.resume().then(()=>clink(70,.6),()=>{});}});
 document.getElementById('panelPos').addEventListener('click',e=>{const b=e.target.closest('[data-pos]');if(!b)return;S.panelPos=b.dataset.pos;syncUI();});
 document.getElementById('hideTitle').addEventListener('click',()=>{S.hideTitle=!S.hideTitle;syncUI();needComposite=true;});
