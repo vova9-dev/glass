@@ -219,7 +219,7 @@ const S = {
   preset:'grid', weight:.5, bounce:.6, friction:.6, nRefl:.8, inAmt:.12, inAng:90, inDist:.12, inBlur:.25, inTone:0, textColor:'#1c1c1e', labelColor:'#18181b', labelTrack:-.035, rim:.55, rimW:.7, rimDir:1, fill:.01, fillW:.55, shadow:.03, shadowSize:.12, shadowY:.16, catchL:5.7, sat:1.8, dots:.05, dotR:.3, dotSp:4.4, dotBase:.13, dotAng:89, dotTone:1, roll:2.8, idleSpin:.1, alt:true, textSize:20, textWeight:400, textTrack:0, textBlock:true, textWidth:526, textLH:1.6, count:10, cScale:1.5, labels:'About, Contacts, Works, Lab', labelSize:.41, labelInk:.97, labelDots:.33, labelWeight:570, labelSettle:.1, labelBack:.8, hovFill:.075, hovRim:.8, labelSizeOpen:.75, pBlur:.73, pFill:.055, pRefl:.37, pFillCol:'#ffffff', pDots:.05, pShadow:.07, pShBlur:36, pShY:40, hideTitle:true, panelPos:'center', openMode:'dive', frost:.85, sound:true, soundVol:.29, ringAmt:.86, flashAmt:.46,
   grid:5, gridMax:1600, spacing:202, lock:true, soft:.52, parallel:true, gravity:false, collide:true, newSize:123, newVariety:.9,
   theme:'grey', ior:1.1, disp:0.245, refl:1.7, bright:1.7, glow:0,
-  lens:0.27, ca:0.06, width:1, orbit:false, handles:false, text:''
+  lens:0.27, ca:0.06, width:1, orbit:false, handles:false, text:'I’m Vova, a product designer based in Barcelona. For the last 15 years I’ve been designing interfaces, websites, games and visual identities.\n\nI studied business, founded my own studio, sharpened my craft at a design agency, and spent the last years as a product designer at startups.\n\nMy goal is to make remarkable, opinionated products that simplify life and bring joy to the people who use them. I believe that’s only possible when product and brand are designed as one thing.'
 };
 
 const THEMES = {
@@ -1581,7 +1581,7 @@ document.getElementById('sound').addEventListener('click',()=>{S.sound=!S.sound;
 document.getElementById('panelPos').addEventListener('click',e=>{const b=e.target.closest('[data-pos]');if(!b)return;S.panelPos=b.dataset.pos;syncUI();});
 document.getElementById('hideTitle').addEventListener('click',()=>{S.hideTitle=!S.hideTitle;syncUI();needComposite=true;});
 // Title / Bio block: swaps the text under the glass and its layout (each keeps its own text, size and weight)
-const TEXT_PRESETS={title:{text:'Vova (9) Deviatkin\nProduct Designer',textSize:20,textWeight:580,textBlock:false},bio:{text:'',textSize:20,textWeight:400,textBlock:true}};
+const TEXT_PRESETS={title:{text:'Vova (9) Deviatkin\nProduct Designer',textSize:20,textWeight:580,textBlock:false},bio:{text:'I’m Vova, a product designer based in Barcelona. For the last 15 years I’ve been designing interfaces, websites, games and visual identities.\n\nI studied business, founded my own studio, sharpened my craft at a design agency, and spent the last years as a product designer at startups.\n\nMy goal is to make remarkable, opinionated products that simplify life and bring joy to the people who use them. I believe that’s only possible when product and brand are designed as one thing.',textSize:20,textWeight:400,textBlock:true}};
 document.getElementById('textModes').addEventListener('click',e=>{
   const b=e.target.closest('[data-tm]');if(!b)return;
   const cur=S.textBlock?'bio':'title';TEXT_PRESETS[cur]={text:S.text,textSize:S.textSize,textWeight:S.textWeight,textBlock:S.textBlock};
