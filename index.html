@@ -104,6 +104,8 @@ textarea{width:100%;box-sizing:border-box;resize:none;background:var(--chip);col
 .sheet-body .work small{color:color-mix(in srgb,var(--sheet-ink) 55%,transparent);font-size:13px}
 .sheet-body .big{font:500 clamp(24px,3.4vw,44px)/1.15 "Geist",system-ui,sans-serif;letter-spacing:-.03em;margin:0 0 8px;user-select:all;word-break:break-all}
 .sheet-body .copy{appearance:none;border:1px solid color-mix(in srgb,var(--sheet-ink) 22%,transparent);background:transparent;color:inherit;border-radius:999px;padding:8px 14px;font:500 12px/1 "Geist",system-ui,sans-serif;cursor:pointer}
+.back{position:fixed;left:16px;top:calc(16px + env(safe-area-inset-top,0px));appearance:none;border:1px solid color-mix(in srgb,var(--back-ink,#1c1c1e) 22%,transparent);background:color-mix(in srgb,#fff 18%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:var(--back-ink,#1c1c1e);font:500 13px/1 "Geist",system-ui,sans-serif;padding:10px 14px;border-radius:999px;cursor:pointer;z-index:5}
+.back:hover{background:color-mix(in srgb,#fff 30%,transparent)}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,8px);background:#ECEBF2;color:#0B0B0E;font:500 12px/1 "Geist",system-ui,sans-serif;padding:9px 13px;border-radius:999px;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .nogl{position:fixed;inset:0;display:grid;place-items:center;padding-inline:16px;text-align:center;color:var(--muted)}
@@ -157,7 +159,7 @@ textarea{width:100%;box-sizing:border-box;resize:none;background:var(--chip);col
       <label class="ctl colorrow" for="labelColor"><span>Label colour <span class="for-theme"></span></span><output id="o-labelColor"></output><input type="color" id="labelColor"></label>
     </div>
     <div class="group" id="sectionSliders"><div class="group-label">Open section</div>
-      <div class="chips" id="openModes"><button class="chip" data-mode="inplace">Open in place</button><button class="chip" data-mode="overlay">Open as overlay</button></div>
+      <div class="chips" id="openModes"><button class="chip" data-mode="inplace">Open in place</button><button class="chip" data-mode="overlay">Open as overlay</button><button class="chip" data-mode="dive">Dive into ball</button><button class="chip" data-mode="depth">Depth</button></div>
       <div class="chips" id="panelPos"><button class="chip" data-pos="center">Panel centre</button><button class="chip" data-pos="left">Panel left</button></div>
       <div class="chips"><button class="chip" id="hideTitle" aria-pressed="true">Hide title when open</button></div>
       <label class="ctl colorrow" for="pFillCol"><span>Panel colour</span><output id="o-pFillCol"></output><input type="color" id="pFillCol"></label>
@@ -180,6 +182,7 @@ Product Designer</textarea>
   <header><h2 id="sheetTitle"></h2><button class="sheet-close" id="sheetClose" aria-label="Close section">×</button></header>
   <div class="sheet-body" id="sheetBody"></div>
 </section>
+<button class="back" id="backBtn" hidden>← Back</button>
 <div class="toast" id="toast" role="status"></div>
 
 <script>
@@ -199,7 +202,7 @@ const FIGMA_LENSES = [
 let lenses = FIGMA_LENSES.map(c => ({...c}));
 let beams = [];
 const S = {
-  preset:'grid', weight:.5, bounce:.6, friction:.6, nRefl:.8, inAmt:.12, inAng:90, inDist:.12, inBlur:.25, inTone:0, textColor:'#1c1c1e', labelColor:'#18181b', labelTrack:-.035, rim:.55, rimW:.7, rimDir:1, fill:.01, fillW:.55, shadow:.03, shadowSize:.12, shadowY:.16, catchL:5.7, sat:1.8, dots:.05, dotR:.3, dotSp:4.4, dotBase:.13, dotAng:89, dotTone:1, roll:2.8, idleSpin:.1, alt:true, textSize:20, textWeight:580, textTrack:0, count:10, cScale:1.5, labels:'About, Contacts, Works, Lab', labelSize:.41, labelInk:.97, labelDots:.33, labelWeight:570, labelSettle:.1, labelBack:.8, hovFill:.075, hovRim:.8, labelSizeOpen:.75, pBlur:.73, pFill:.055, pRefl:.37, pFillCol:'#ffffff', pDots:.05, pShadow:.07, pShBlur:36, pShY:40, hideTitle:true, panelPos:'center', openMode:'inplace', frost:.85, sound:true, soundVol:.29, ringAmt:.86, flashAmt:.46,
+  preset:'grid', weight:.5, bounce:.6, friction:.6, nRefl:.8, inAmt:.12, inAng:90, inDist:.12, inBlur:.25, inTone:0, textColor:'#1c1c1e', labelColor:'#18181b', labelTrack:-.035, rim:.55, rimW:.7, rimDir:1, fill:.01, fillW:.55, shadow:.03, shadowSize:.12, shadowY:.16, catchL:5.7, sat:1.8, dots:.05, dotR:.3, dotSp:4.4, dotBase:.13, dotAng:89, dotTone:1, roll:2.8, idleSpin:.1, alt:true, textSize:20, textWeight:580, textTrack:0, count:10, cScale:1.5, labels:'About, Contacts, Works, Lab', labelSize:.41, labelInk:.97, labelDots:.33, labelWeight:570, labelSettle:.1, labelBack:.8, hovFill:.075, hovRim:.8, labelSizeOpen:.75, pBlur:.73, pFill:.055, pRefl:.37, pFillCol:'#ffffff', pDots:.05, pShadow:.07, pShBlur:36, pShY:40, hideTitle:true, panelPos:'center', openMode:'dive', frost:.85, sound:true, soundVol:.29, ringAmt:.86, flashAmt:.46,
   grid:5, gridMax:1600, spacing:202, lock:true, soft:.52, parallel:true, gravity:false, collide:true, newSize:123, newVariety:.9,
   theme:'grey', ior:1.1, disp:0.245, refl:1.7, bright:1.7, glow:0,
   lens:0.27, ca:0.06, width:1, orbit:false, handles:false, text:'Vova (9) Deviatkin\nProduct Designer'
@@ -286,7 +289,7 @@ const PRESETS = {
     rim:.55, rimW:.7, rimDir:1, fill:.01, fillW:.55, shadow:.03, shadowSize:.12, shadowY:.16, catchL:5.7, newSize:123, newVariety:.9,
     dots:.05, dotR:.3, dotSp:4.4, dotBase:.13, dotAng:89, dotTone:1, roll:2.8, idleSpin:.1,
     text:'Vova (9) Deviatkin\nProduct Designer', textWeight:580,
-    labelSize:.41, labelWeight:570, labelTrack:-.035, labelInk:.97, labelDots:.33, labelSettle:.1, labelBack:.8, hovFill:.075, hovRim:.8, labelSizeOpen:.75, pBlur:.73, pFill:.055, pRefl:.37, pFillCol:'#ffffff', pDots:.05, pShadow:.07, pShBlur:36, pShY:40, hideTitle:true, panelPos:'center', openMode:'inplace', frost:.85, sound:true, soundVol:.29, ringAmt:.86, flashAmt:.46,
+    labelSize:.41, labelWeight:570, labelTrack:-.035, labelInk:.97, labelDots:.33, labelSettle:.1, labelBack:.8, hovFill:.075, hovRim:.8, labelSizeOpen:.75, pBlur:.73, pFill:.055, pRefl:.37, pFillCol:'#ffffff', pDots:.05, pShadow:.07, pShBlur:36, pShY:40, hideTitle:true, panelPos:'center', openMode:'dive', frost:.85, sound:true, soundVol:.29, ringAmt:.86, flashAmt:.46,
     lenses:[{x:-67.39,y:-194.42,r:109.493},{x:423.32,y:263.42,r:64.493},{x:394.83,y:43.37,r:83.493},{x:33.49,y:262.45,r:64.0},{x:-400.75,y:-267.11,r:60.0},{x:-308.65,y:-111.55,r:60.0},{x:180.66,y:110.17,r:60.0},{x:277.92,y:-208.04,r:101.347},{x:-175.92,y:120.2,r:98.693},{x:241.74,y:275.23,r:56.42}]}),
   studio: () => ({beams:[{sx:-246.7,sy:130.02,ax:16.96,ay:12.65,w:1,p:1,lam:null}], disp:.205, ior:1.14, refl:1, glow:.25,
     bright:2.3, lens:.23, ca:.06, theme:'grey', lenses:STUDIO_LENSES}),
@@ -345,6 +348,9 @@ uniform vec2 uRes;uniform float uDpr;
 uniform sampler2D uText,uL0,uL1,uL2,uL3;
 uniform float uLS,uSoft,uSat,uDots,uDotR,uDotSp,uDotBase,uDotTone;uniform vec3 uDotL;uniform mat3 uRot[12];uniform float uLabI[12];uniform sampler2D uLabT;uniform float uLabW,uLabInk,uLabDots,uLabBack;uniform vec3 uLabCol;
 uniform vec4 uImp[12];uniform float uRingAmt,uFlashAmt;uniform float uHov[12];uniform vec4 uPanel;uniform float uPanelR,uPanelOn,uTitleHide;
+// Section page drawn into the same layer as the title, so the glass bends it and the beams light it.
+uniform sampler2D uPage;uniform vec4 uPageRect;uniform float uPageE;uniform int uDiveI;uniform float uDiveE;
+float pageA(vec2 q){vec2 uv=(q-uPageRect.xy)/uPageRect.zw;if(uv.x<0.||uv.x>1.||uv.y<0.||uv.y>1.)return 0.;return textureLod(uPage,vec2(uv.x,1.-uv.y),0.).a;}
 float sdRB(vec2 p,vec2 b,float r){vec2 q=abs(p)-b+r;return length(max(q,0.))+min(max(q.x,q.y),0.)-r;}
 // Outward normal of the rounded box, computed exactly. A finite-difference gradient is zero on the box's
 // centre line (top and bottom cancel) and normalizing that gave NaN = a black line on some GPUs.
@@ -430,6 +436,7 @@ void main(){
   vec2 off=-nr*rad*uLens*pow(edge,3.);
   vec2 qg=p+off,qr=p+off*(1.+uCA),qb=p+off*(1.-uCA);
   vec3 tm=vec3(textureLod(uText,UV(qr),0.).a,textureLod(uText,UV(qg),0.).a,textureLod(uText,UV(qb),0.).a)*(1.-uTitleHide);
+  if(uPageE>0.)tm=max(tm,vec3(pageA(qr),pageA(qg),pageA(qb))*uPageE);
   vec2 up=UV(p),uq=UV(qg);
   vec3 blp=bl(up);
   vec3 haze=satL(sharp(up)+blp*uGlow);
@@ -459,7 +466,7 @@ void main(){
   col+=blp*rim*uCatch;
   if(uDots>0.){
     float dd=0.;
-    for(int i=0;i<12;i++){if(i>=uN)break;vec3 c=uC[i];if(length(p-c.xy)<c.z)dd=max(dd,stipple(p-c.xy,c.z,float(i),uRot[i],uLabI[i],uImp[i]));}
+    for(int i=0;i<12;i++){if(i>=uN)break;vec3 c=uC[i];if(length(p-c.xy)<c.z)dd=max(dd,stipple(p-c.xy,c.z,float(i),uRot[i],uLabI[i],uImp[i])*(i==uDiveI?1.-.85*uDiveE:1.));}
     vec3 dc=mix(vec3(.01),vec3(1.),uDotTone)+satL(blp+sharp(up))*uCatch*.3;
     col=mix(col,dc,dd*uDots);
   }
@@ -474,8 +481,9 @@ void main(){
         vec2 qk=q+bo*(1.+uCA*float(1-k))/c.z;float lk=min(dot(qk,qk),1.);
         ba[k]=labelA(uRot[i]*vec3(qk,-sqrt(1.-lk)),uLabI[i]);
       }
-      col=mix(col,ink,ba*uLabInk*uLabBack);
-      col=mix(col,ink,labelA(uRot[i]*vec3(q,hz),uLabI[i])*uLabInk);}
+      float lf=i==uDiveI?1.-uDiveE:1.; // the label fades as you dive into its ball
+      col=mix(col,ink,ba*uLabInk*uLabBack*lf);
+      col=mix(col,ink,labelA(uRot[i]*vec3(q,hz),uLabI[i])*uLabInk*lf);}
   }
   col+=haze*uHaze;
   for(int i=0;i<10;i++){if(i>=uNS)break;float d=length(p-uS[i].xy);col+=uSC[i]*(1.2*exp(-d*d/10.)+.4*uGlow/(1.+d*d/300.));}
@@ -789,7 +797,11 @@ function composite(target=null){
     gl.uniform1f(p.u('uLS'),1/Wacc);gl.uniform1f(p.u('uSoft'),S.soft);gl.uniform1f(p.u('uSat'),S.sat);
     const c=new Float32Array(36);V.forEach((l,i)=>{const [x,y]=toScreen(l.x,l.y);c.set([x,y,l.r*sc],i*3);});
     gl.uniform3fv(p.u('uC'),c);gl.uniform1i(p.u('uN'),V.length);
-    gl.uniform1f(p.u('uTitleHide'),sec.lens&&S.hideTitle?Math.min(Math.max(sec.e,0),1):0); // the title fades out as a section opens
+    gl.uniform1f(p.u('uTitleHide'),sec.lens&&(S.hideTitle||pageMode())?Math.min(Math.max(sec.e,0),1):0); // the title fades out as a section opens
+    {const on=sec.lens&&pageMode(),C=pageCol();tex(6,pageTex);gl.uniform1i(p.u('uPage'),6);
+     gl.uniform1f(p.u('uPageE'),on?Math.min(Math.max((sec.e-.35)/.65,0),1):0);
+     gl.uniform4f(p.u('uPageRect'),C.x,C.top-(sec.scroll||0),C.w,Math.max(pageH,1));
+     gl.uniform1i(p.u('uDiveI'),on&&S.openMode==='dive'?V.indexOf(sec.lens):-1);gl.uniform1f(p.u('uDiveE'),Math.min(Math.max(sec.e,0),1));}
     {const g=panelGeom();gl.uniform1f(p.u('uPanelOn'),g?1:0); // balls still reflect the panel
      if(g){gl.uniform4f(p.u('uPanel'),g.cx,g.cy,g.hx,g.hy);gl.uniform1f(p.u('uPanelR'),g.r);}}
     const s=new Float32Array(30),scol=new Float32Array(30);
@@ -842,6 +854,14 @@ function hit(x,y){
   return best||{type:S.lock?'none':'aim'};
 }
 cv.addEventListener('pointerdown',e=>{
+  if(sec.lens&&pageMode()){
+    // dive: everything is inside the ball, so a drag scrolls; depth: balls can still be thrown, empty space scrolls
+    const h=S.openMode==='depth'?hit(e.clientX,e.clientY):{type:'scroll'};
+    drag=h.type==='lens'?h:{type:'scroll'};drag.cx=e.clientX;drag.cy=e.clientY;drag.ly=e.clientY;drag.t0=performance.now();cv.setPointerCapture(e.pointerId);
+    const [x,y]=toScene(e.clientX,e.clientY);Object.assign(pv,{x,y,t:performance.now(),vx:0,vy:0});
+    if(drag.type==='lens')move(e);
+    return;
+  }
   if(sec.lens&&!inPlace()){ // overlay: any click switches or closes straight away
     const h=hit(e.clientX,e.clientY),l=h.type==='lens'?lenses[h.i]:null;
     if(l&&l.label!=null){openSection(l);return;}
@@ -858,11 +878,20 @@ cv.addEventListener('pointerleave',()=>{hoverLens=null;});
 cv.addEventListener('pointermove',e=>{
   if(drag){move(e);return;}
   const h=hit(e.clientX,e.clientY),l=h.type==='lens'?lenses[h.i]:null;
-  hoverLens=e.pointerType==='mouse'&&l&&l.label!=null&&!l.hidden?l:null;
+  hoverLens=e.pointerType==='mouse'&&l&&l.label!=null&&!l.hidden&&!(sec.lens&&pageMode())?l:null;
   cv.className=hoverLens?'point':h.type==='lens'||h.type==='src'?'grab':'';
 });
 const end=e=>{
   const click=drag&&e&&Math.hypot(e.clientX-drag.cx,e.clientY-drag.cy)<5&&performance.now()-drag.t0<350;
+  if(drag&&sec.lens&&pageMode()&&click){
+    // a click on another menu ball switches; a click outside the reading column closes
+    const l=drag.type==='lens'?lenses[drag.i]:null,C=pageCol();
+    drag=null;cv.className='';
+    if(l&&l.label!=null&&l!==sec.lens){openSection(l);return;}
+    if(e.clientX<C.x-24||e.clientX>C.x+C.w+24)closePanel();
+    return;
+  }
+  if(drag&&drag.type==='scroll'){drag=null;return;}
   if(click&&sec.lens&&drag.type!=='lens'&&drag.type!=='src'&&!insidePanel(e.clientX,e.clientY)){closePanel();drag=null;cv.className='';return;}
   if(drag&&drag.type==='lens'){
     const l=lenses[drag.i];
@@ -878,6 +907,7 @@ const end=e=>{
 };
 cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',end);
 function move(e){
+  if(drag.type==='scroll'){scrollPage(drag.ly-e.clientY);drag.ly=e.clientY;return;}
   const [x,y]=toScene(e.clientX,e.clientY),now=performance.now(),dt=(now-pv.t)/1000;
   if(dt>.001){pv.vx=pv.vx*.5+(x-pv.x)/dt*.5;pv.vy=pv.vy*.5+(y-pv.y)/dt*.5;pv.x=x;pv.y=y;pv.t=now;}
   if(drag.type==='src'){const b=beams[drag.i];if(S.parallel){b.ax+=x-b.sx;b.ay+=y-b.sy;}b.sx=x;b.sy=y;}
@@ -896,7 +926,7 @@ function move(e){
 // Bounciness is the restitution of hits; friction is how fast they slow down.
 const PHYS={g:900,get damp(){return S.friction},get eWall(){return S.bounce*.9},get eHit(){return S.bounce}};
 const heft=()=>1-.6*S.weight;
-const held=l=>l.hidden||(drag&&drag.type==='lens'&&lenses[drag.i]===l);
+const held=l=>l.hidden||l.parked||(drag&&drag.type==='lens'&&lenses[drag.i]===l);
 /* ---------- impacts: rim glint, dot sparkle, glass clink ---------- */
 const clock=()=>performance.now()/1000;
 let actx=null,lastClink=0;
@@ -957,7 +987,7 @@ function panelLayout(){
   const side=Math.max(90,Math.min(230,W*.15));return {x:side,y:12,w:W-2*side,h:H-24,r:36};
 }
 function panelGeom(){
-  if(!sec.lens)return null;
+  if(!sec.lens||pageMode())return null;
   const e=sec.e,L=panelLayout(),f=sec.from;
   if(inPlace()&&S.panelPos==='left'&&W>=700){
     // sweep: the ball first rolls to the left edge at its own size (other balls can get around it),
@@ -975,6 +1005,17 @@ function sdRB(px,py,bx,by,r){const qx=Math.abs(px)-bx+r,qy=Math.abs(py)-by+r;ret
 function insidePanel(x,y){const g=panelGeom();return g&&sdRB(x-g.cx,y-g.cy,g.hx,g.hy,g.r)<0;}
 function openSection(l){
   if(sec.lens===l)return;
+  if(pageMode()){
+    if(sec.lens){sec.next=l;closePanel();return;}
+    sec.lens=l;sec.dir=1;sec.p=0;sec.e=0;sec.scroll=0;l.hov=0;
+    lenses.forEach(o=>{o.orig={x:o.x,y:o.y,r:o.r};});
+    if(S.openMode==='dive')lenses.forEach(o=>{o.parked=true;o.vx=o.vy=0;});
+    else{ // depth: the balls shrink a little so they fit beside the reading column
+      const area=lenses.reduce((a,o)=>a+Math.PI*(o.r*sc)**2,0),free=W*H-pageCol().w*H;
+      sec.k=Math.max(.45,Math.min(1,Math.sqrt(.38*free/Math.max(area,1))));
+    }
+    buildPage(labelList()[l.label]||'');backBtn.hidden=false;markDirty();return;
+  }
   if(sec.lens){
     if(inPlace()){sec.next=l;closePanel();return;} // in place: shrink the current panel back into a ball, then grow the new one
     const old=sec.lens;old.hidden=false; // overlay: swap which ball is the panel
@@ -994,9 +1035,34 @@ function openSection(l){
   }else{fillSheet(l);sheet.hidden=false;}
   markDirty();
 }
+// Dive: the clicked ball rolls to the centre and grows past the screen edges (you end up inside it) while
+// the other balls fly outward off-screen. Depth: balls stay physical, shrink a little and keep out of the column.
+const DIVE_S=1.1;
+function stepPage(dt){
+  const was=sec.p;sec.p=Math.min(1,Math.max(0,sec.p+sec.dir*dt/DIVE_S));
+  sec.e=easeIO(sec.p);const e=sec.e;
+  if(S.openMode==='dive'){
+    const R=Math.hypot(W,H)*.47/sc,far=Math.hypot(halfW(),halfH())*1.8;
+    for(const o of lenses){
+      if(!o.orig)continue;const g=o.orig;let nx,ny,nr;
+      if(o===sec.lens){nx=g.x*(1-e);ny=g.y*(1-e);nr=g.r+(R-g.r)*e;}
+      else{let dx=g.x,dy=g.y;const d=Math.hypot(dx,dy);if(d<1){dx=1;dy=0;}else{dx/=d;dy/=d;}
+        nx=g.x+dx*far*e;ny=g.y+dy*far*e;nr=g.r*(1+.6*e);} // they pass by and leave the frame
+      o.vx=dt>0?(nx-o.x)/dt:0;o.vy=dt>0?(ny-o.y)/dt:0;o.x=nx;o.y=ny;o.r=nr;
+    }
+  }else for(const o of lenses)if(o.orig)o.r=o.orig.r*(1+(sec.k-1)*e);
+  if(sec.p===0&&sec.dir<0){
+    for(const o of lenses){if(o.orig){if(S.openMode==='dive'){o.x=o.orig.x;o.y=o.orig.y;}o.r=o.orig.r;}o.orig=null;o.parked=false;o.vx=o.vy=0;}
+    sec.lens=null;sec.dir=0;backBtn.hidden=true;markDirty();
+    if(sec.next){const n=sec.next;sec.next=null;openSection(n);}
+    return true;
+  }
+  backBtn.style.setProperty('--back-ink',S.textColor);
+  return was!==sec.p;
+}
 function closePanel(){
   if(!sec.lens)return;
-  sec.dir=-1;
+  sec.dir=-1;backBtn.hidden=true;
   if(inPlace()){ // collapses into a ball part of the way back toward where it came from
     const L=panelLayout(),cx=L.x+L.w/2,cy=L.y+L.h/2,h=sec.home||{x:cx,y:cy};
     sec.from={x:cx+(h.x-cx)*.3,y:cy+(h.y-cy)*.3,r:sec.lens.r*sc};
@@ -1004,6 +1070,7 @@ function closePanel(){
 }
 function stepPanel(dt){
   if(!sec.lens)return false;
+  if(pageMode())return stepPage(dt);
   const was=sec.p;sec.p=Math.min(1,Math.max(0,sec.p+sec.dir*dt/(sec.dir>0?OPEN_S:CLOSE_S)));
   sec.e=sec.dir>=0?easeOutBack(sec.p):1-easeInBack(1-sec.p);
   const e=Math.min(Math.max(sec.e,0),1);
@@ -1023,6 +1090,61 @@ function stepPanel(dt){
   }
   return was!==sec.p;
 }
+
+/* ---------- section pages (dive / depth): content rendered into the glass world's text layer ---------- */
+const pc=document.createElement('canvas'),pcx=pc.getContext('2d'),pageTex=gl.createTexture(),backBtn=document.getElementById('backBtn');
+let pageH=1;
+gl.bindTexture(gl.TEXTURE_2D,pageTex);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,1,1,0,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array(4)); // blank until a page is built
+const pageMode=()=>S.openMode==='dive'||S.openMode==='depth';
+const pageCol=()=>{const w=Math.min(640,W-48);return {x:(W-w)/2,w,top:Math.max(88,H*.14)};};
+// Placeholder copy to replace. Block types: h1, lead, note, h3, p, row [left,right], big, tiles [count,name,meta].
+const PAGE={
+  about:[['h1','About'],['lead','Placeholder intro: two or three sentences about who you are, what you design and what you care about.'],['note','Placeholder copy. Replace with your own.'],
+    ['h3','Now'],['row','Company or studio — role','2024–now'],['h3','Before'],['row','Company — Product designer','2021–2024'],['row','Company — Designer','2018–2021'],['row','Studio — Junior designer','2016–2018'],
+    ['h3','How I work'],['p','A paragraph about your process: how you frame problems, prototype, test and ship with engineers.'],['p','A second paragraph about the kind of products and teams you do your best work with.'],
+    ['h3','Recognition'],['row','Award or talk','2023'],['row','Feature or publication','2022'],['h3','Outside work'],['p','A line or two about interests, side projects or what you are learning.']],
+  contacts:[['h1','Contacts'],['big','hello@vova9.com'],['h3','Elsewhere'],['row','X','@handle'],['row','LinkedIn','/in/profile'],['note','Handles are placeholders.']],
+  works:[['h1','Works'],['lead','Selected projects.'],['tiles',8,'Project','Year · Role']],
+  lab:[['h1','Lab'],['lead','Small visual experiments, first posted on X.'],['note','Placeholder tiles. Replace with your posts.'],['tiles',9,'Experiment','Date · short note']],
+};
+function buildPage(name){
+  const C=pageCol(),w=C.w,r=Math.min(2,dpr),blocks=PAGE[name.toLowerCase()]||[['h1',name],['p','Content goes here.']];
+  const run=draw=>{
+    let y=0;const c=pcx;
+    const font=(wt,sz,fam='Geist')=>{c.font=`${wt} ${sz*r}px ${fam}, system-ui, sans-serif`;};
+    const text=(t,x,yy,a,al='left')=>{if(!draw)return;c.globalAlpha=a;c.textAlign=al;c.fillText(t,x*r,yy*r);};
+    const wrap=(t,sz,lh,wt,a)=>{font(wt,sz);let line='';for(const wd of t.split(' ')){const tt=line?line+' '+wd:wd;if(c.measureText(tt).width/r>w&&line){text(line,0,y,a);y+=lh;line=wd;}else line=tt;}if(line){text(line,0,y,a);y+=lh;}};
+    c.textBaseline='top';c.fillStyle='#fff';c.strokeStyle='#fff';
+    for(const b of blocks){
+      if(b[0]==='h1'){wrap(b[1],40,46,600,1);y+=20;}
+      else if(b[0]==='lead'){wrap(b[1],21,31,400,1);y+=14;}
+      else if(b[0]==='note'){wrap(b[1],12,18,400,.55);y+=8;}
+      else if(b[0]==='h3'){y+=28;font(500,11,'Geist Mono');text(b[1].toUpperCase(),0,y,.55);y+=24;}
+      else if(b[0]==='p'){wrap(b[1],16,26,400,.92);y+=10;}
+      else if(b[0]==='big'){wrap(b[1],40,46,500,1);y+=10;}
+      else if(b[0]==='row'){if(draw){c.globalAlpha=.16;c.fillRect(0,y*r,w*r,Math.max(1,r));}y+=12;font(400,16);text(b[1],0,y,.92);text(b[2],w,y,.55,'right');y+=34;}
+      else if(b[0]==='tiles'){
+        const cols=w>520?3:2,gap=16,tw=(w-gap*(cols-1))/cols,th=tw*.75;
+        for(let i=0;i<b[1];i++){
+          const tx=(i%cols)*(tw+gap),ty=y+Math.floor(i/cols)*(th+64);
+          if(draw){c.beginPath();c.roundRect(tx*r,ty*r,tw*r,th*r,16*r);c.globalAlpha=.07;c.fill();c.globalAlpha=.45;c.lineWidth=r;c.stroke();}
+          font(500,15);text(`${b[2]} ${i+1}`,tx,ty+th+10,1);font(400,13);text(b[3],tx,ty+th+32,.55);
+        }
+        y+=Math.ceil(b[1]/cols)*(th+64);
+      }
+    }
+    return y+40;
+  };
+  pageH=run(false);pc.width=Math.ceil(w*r);pc.height=Math.ceil(pageH*r);run(true);
+  gl.bindTexture(gl.TEXTURE_2D,pageTex);
+  for(const [k,v] of [[gl.TEXTURE_MIN_FILTER,gl.LINEAR],[gl.TEXTURE_MAG_FILTER,gl.LINEAR],[gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE],[gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE]])gl.texParameteri(gl.TEXTURE_2D,k,v);
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,pc);gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);
+  sec.pageName=name;needComposite=true;
+}
+const maxScroll=()=>Math.max(0,pageCol().top+pageH+60-H);
+function scrollPage(d){if(!sec.lens||!pageMode())return;sec.scroll=Math.min(maxScroll(),Math.max(0,(sec.scroll||0)+d));needComposite=true;}
+addEventListener('wheel',e=>{if(sec.lens&&pageMode()){e.preventDefault();scrollPage(e.deltaY);}},{passive:false});
+backBtn.addEventListener('click',closePanel);
 
 /* ---------- section content (placeholder copy to replace) ---------- */
 const sheet=document.getElementById('sheet'),sheetBody=document.getElementById('sheetBody');
@@ -1077,6 +1199,10 @@ function physics(dt){
       if(held(l))continue;
       if(S.gravity)l.vy+=PHYS.g*h;
       const f=Math.exp(-PHYS.damp*h);l.vx*=f;l.vy*=f;
+      if(sec.lens&&S.openMode==='depth'){ // depth: a gentle push out of the reading column
+        const half=pageCol().w/2/sc+l.r*.9;
+        if(Math.abs(l.x)<half){const sd=l.x===0?(l.id&&l.id.charCodeAt(1)%2?1:-1):Math.sign(l.x);l.vx+=sd*2600*Math.max(sec.e,0)*h;}
+      }
       l.x+=l.vx*h;l.y+=l.vy*h;
       const ox=l.x,oy=l.y;
       const wall=(side,dx,dy,v)=>{const k=l.id+side;now.add(k);const fresh=!touching.has(k);if(fresh)impact(l,dx,dy,v*.6,true);return fresh?PHYS.eWall:0;};
@@ -1362,6 +1488,7 @@ function resize(){
   if(S.parallel&&beams.length)beams=gridBeams(beams.length,true).map((b,i)=>({...b,w:beams[i]?beams[i].w:b.w})); // grid follows the window
   else beams.forEach(b=>{b.sx=Math.max(-hw,Math.min(hw,b.sx));b.sy=Math.max(-hh,Math.min(hh,b.sy));});
   buildTargets();drawText();placeHandles();markDirty();
+  if(sec.lens&&pageMode()&&sec.pageName!=null)buildPage(sec.pageName);
 }
 let last=performance.now();
 function loop(now){
@@ -1389,7 +1516,7 @@ function loop(now){
   else if(clearNext){decay=0;frames=0;}
   else if(frames<MAXF)decay=1;
   if(decay!==null){accumulate(decay);frames++;clearNext=false;bloom();needComposite=true;}
-  if(needComposite){if(sec.lens){composite(T.scene);panelPass();}else composite();needComposite=false;}
+  if(needComposite){if(panelGeom()){composite(T.scene);panelPass();}else composite();needComposite=false;}
 }
 
 W=innerWidth;H=innerHeight;sc=Math.min(W/620,H/720,2);
