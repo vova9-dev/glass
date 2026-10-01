@@ -199,7 +199,7 @@ const FIGMA_LENSES = [
 let lenses = FIGMA_LENSES.map(c => ({...c}));
 let beams = [];
 const S = {
-  preset:'grid', weight:.5, bounce:.6, friction:.6, nRefl:.8, inAmt:.12, inAng:90, inDist:.12, inBlur:.25, inTone:0, textColor:'#1c1c1e', labelColor:'#18181b', labelTrack:-.035, rim:.55, rimW:.7, rimDir:1, fill:.01, fillW:.55, shadow:.03, shadowSize:.12, shadowY:.16, catchL:5.7, sat:1.8, dots:1, dotR:.3, dotSp:4.4, dotBase:.13, dotAng:89, dotTone:1, roll:2.8, idleSpin:.1, alt:true, textSize:20, textWeight:580, textTrack:0, count:10, cScale:1.5, labels:'About, Contacts, Works, Lab', labelSize:.41, labelInk:.97, labelDots:.33, labelWeight:570, labelSettle:.1, labelBack:.8, hovFill:.075, hovRim:.8, labelSizeOpen:.75, pBlur:.73, pFill:.055, pRefl:.37, pFillCol:'#ffffff', pDots:.05, pShadow:.07, pShBlur:36, pShY:40, hideTitle:true, panelPos:'center', openMode:'inplace', frost:.85, sound:true, soundVol:.29, ringAmt:.86, flashAmt:.46,
+  preset:'grid', weight:.5, bounce:.6, friction:.6, nRefl:.8, inAmt:.12, inAng:90, inDist:.12, inBlur:.25, inTone:0, textColor:'#1c1c1e', labelColor:'#18181b', labelTrack:-.035, rim:.55, rimW:.7, rimDir:1, fill:.01, fillW:.55, shadow:.03, shadowSize:.12, shadowY:.16, catchL:5.7, sat:1.8, dots:.05, dotR:.3, dotSp:4.4, dotBase:.13, dotAng:89, dotTone:1, roll:2.8, idleSpin:.1, alt:true, textSize:20, textWeight:580, textTrack:0, count:10, cScale:1.5, labels:'About, Contacts, Works, Lab', labelSize:.41, labelInk:.97, labelDots:.33, labelWeight:570, labelSettle:.1, labelBack:.8, hovFill:.075, hovRim:.8, labelSizeOpen:.75, pBlur:.73, pFill:.055, pRefl:.37, pFillCol:'#ffffff', pDots:.05, pShadow:.07, pShBlur:36, pShY:40, hideTitle:true, panelPos:'center', openMode:'inplace', frost:.85, sound:true, soundVol:.29, ringAmt:.86, flashAmt:.46,
   grid:5, gridMax:1600, spacing:202, lock:true, soft:.52, parallel:true, gravity:false, collide:true, newSize:123, newVariety:.9,
   theme:'grey', ior:1.1, disp:0.245, refl:1.7, bright:1.7, glow:0,
   lens:0.27, ca:0.06, width:1, orbit:false, handles:false, text:'Vova (9) Deviatkin\nProduct Designer'
@@ -273,9 +273,9 @@ function gridBeams(n,keep){
    background, so switching between grey and void swaps in the settings that work on it. */
 const THEME_KEYS=['textColor','labelColor','nRefl','inAmt','inAng','inDist','inBlur','inTone','rim','rimW','rimDir','fill','fillW','shadow','shadowSize','shadowY','catchL','dots','dotR','dotSp','dotBase','dotAng','dotTone'];
 const THEME_STYLE={
-  grey:    {textColor:'#1c1c1e',labelColor:'#18181b',nRefl:1.03,inAmt:0,inAng:90,inDist:.04,inBlur:.19,inTone:1,rim:.51,rimW:.5,rimDir:1,fill:0,fillW:.02,shadow:.03,shadowSize:.12,shadowY:.16,catchL:5.7,dots:1,  dotR:.3,dotSp:4.4,dotBase:.13,dotAng:89,dotTone:1},
-  void:    {textColor:'#a4a3ad',labelColor:'#a4a3ad',nRefl:.8,inAmt:.12,inAng:90,inDist:.12,inBlur:.25,inTone:1,rim:.45,rimW:.7,rimDir:1,fill:.02,fillW:.55,shadow:0,  shadowSize:.14,shadowY:.28,catchL:5.7,dots:.7, dotR:.3,dotSp:4.4,dotBase:.13,dotAng:89,dotTone:1},
-  graphite:{textColor:'#c8c7cf',labelColor:'#c8c7cf',nRefl:.8,inAmt:.12,inAng:90,inDist:.12,inBlur:.25,inTone:0,rim:.5, rimW:.7,rimDir:1,fill:.02,fillW:.55,shadow:.2, shadowSize:.14,shadowY:.28,catchL:5.7,dots:.8, dotR:.3,dotSp:4.4,dotBase:.13,dotAng:89,dotTone:1},
+  grey:    {textColor:'#1c1c1e',labelColor:'#18181b',nRefl:1.03,inAmt:0,inAng:90,inDist:.04,inBlur:.19,inTone:1,rim:.51,rimW:.5,rimDir:1,fill:0,fillW:.02,shadow:.03,shadowSize:.12,shadowY:.16,catchL:5.7,dots:.05,dotR:.3,dotSp:4.4,dotBase:.13,dotAng:89,dotTone:1},
+  void:    {textColor:'#a4a3ad',labelColor:'#a4a3ad',nRefl:.8,inAmt:.12,inAng:90,inDist:.12,inBlur:.25,inTone:1,rim:.45,rimW:.7,rimDir:1,fill:.02,fillW:.55,shadow:0,  shadowSize:.14,shadowY:.28,catchL:5.7,dots:.05,dotR:.3,dotSp:4.4,dotBase:.13,dotAng:89,dotTone:1},
+  graphite:{textColor:'#c8c7cf',labelColor:'#c8c7cf',nRefl:.8,inAmt:.12,inAng:90,inDist:.12,inBlur:.25,inTone:0,rim:.5, rimW:.7,rimDir:1,fill:.02,fillW:.55,shadow:.2, shadowSize:.14,shadowY:.28,catchL:5.7,dots:.05,dotR:.3,dotSp:4.4,dotBase:.13,dotAng:89,dotTone:1},
 };
 S.per=JSON.parse(JSON.stringify(THEME_STYLE));
 const hexLin=h=>[1,3,5].map(i=>Math.pow(parseInt(h.slice(i,i+2),16)/255,2.2));
@@ -284,7 +284,7 @@ const PRESETS = {
   grid:   () => ({beams:(S.alt=true,S.grid=5,gridMeta={cx:0,cy:0,dx:0,dy:-1},gridBeams(5,true).map(b=>({...b,w:1}))), parallel:true,
     disp:.245, ior:1.1, refl:1.7, glow:0, bright:1.7, lens:.27, ca:.06, theme:'grey', grid:5, spacing:202, cScale:1.5, soft:.52, sat:1.8,
     rim:.55, rimW:.7, rimDir:1, fill:.01, fillW:.55, shadow:.03, shadowSize:.12, shadowY:.16, catchL:5.7, newSize:123, newVariety:.9,
-    dots:1, dotR:.3, dotSp:4.4, dotBase:.13, dotAng:89, dotTone:1, roll:2.8, idleSpin:.1,
+    dots:.05, dotR:.3, dotSp:4.4, dotBase:.13, dotAng:89, dotTone:1, roll:2.8, idleSpin:.1,
     text:'Vova (9) Deviatkin\nProduct Designer', textWeight:580,
     labelSize:.41, labelWeight:570, labelTrack:-.035, labelInk:.97, labelDots:.33, labelSettle:.1, labelBack:.8, hovFill:.075, hovRim:.8, labelSizeOpen:.75, pBlur:.73, pFill:.055, pRefl:.37, pFillCol:'#ffffff', pDots:.05, pShadow:.07, pShBlur:36, pShY:40, hideTitle:true, panelPos:'center', openMode:'inplace', frost:.85, sound:true, soundVol:.29, ringAmt:.86, flashAmt:.46,
     lenses:[{x:-67.39,y:-194.42,r:109.493},{x:423.32,y:263.42,r:64.493},{x:394.83,y:43.37,r:83.493},{x:33.49,y:262.45,r:64.0},{x:-400.75,y:-267.11,r:60.0},{x:-308.65,y:-111.55,r:60.0},{x:180.66,y:110.17,r:60.0},{x:277.92,y:-208.04,r:101.347},{x:-175.92,y:120.2,r:98.693},{x:241.74,y:275.23,r:56.42}]}),
